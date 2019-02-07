@@ -135,7 +135,9 @@
         totalPrice: '19.99'
       }
     },
-    vaultManager: true
+    vaultManager: {
+      preventDeletingPaymentMethodsWithSubscriptions: true
+    }
   };
   var dropinInstance;
   var form = document.querySelector('#checkout-form');

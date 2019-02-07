@@ -137,6 +137,11 @@ var VERSION = process.env.npm_package_version;
  * @param {string} amount The amount to verify with 3D Secure.
  */
 
+/**
+ * @typedef {boolean|object} vaultManagerOptions The configuration options for the Vault Manager. *Note:* This feature is not supported in Internet Explorer 9.
+ * @param {boolean} [preventDeletingPaymentMethodsWithSubscriptions=false] Whether or not to prevent customers from deleting payemnt methods that are assocaited with Braintree's recurring billing suystem. If not set, or set to false, then deleting a payment method from Drop-in will permanently delete the payment method, causing any subscriptions associated with it to fail to bill.
+ */
+
 /** @typedef {object} paypalCreateOptions The configuration options for PayPal and PayPalCredit. For a full list of options see the [PayPal Checkout client reference options](http://braintree.github.io/braintree-web/{@pkg bt-web-version}/PayPalCheckout.html#createPayment).
  *
  * @param {string} flow Either `checkout` for a one-time [Checkout with PayPal](https://developers.braintreepayments.com/guides/paypal/checkout-with-paypal/javascript/v3) flow or `vault` for a [Vault flow](https://developers.braintreepayments.com/guides/paypal/vault/javascript/v3). Required when using PayPal or PayPal Credit.
@@ -249,7 +254,7 @@ var VERSION = process.env.npm_package_version;
  *
  * @param {object} [options.threeDSecure] The configuration options for 3D Secure. See [`threeDSecureOptions`](#~threeDSecureOptions) for all `threeDSecure` options. If 3D Secure is configured and fails to load, Drop-in creation will fail.
  *
- * @param {boolean} [options.vaultManager=false] Whether or not to allow a customer to delete saved payment methods when used with a [client token with a customer id](https://developers.braintreepayments.com/reference/request/client-token/generate/#customer_id). *Note:* Deleting a payment method from Drop-in will permanently delete the payment method, so this option is not recomended for merchants using Braintree's recurring billing system. This feature is not supported in Internet Explorer 9.
+ * @param {boolean|object} [options.vaultManager=false] Whether or not to allow a customer to delete saved payment methods when used with a [client token with a customer id](https://developers.braintreepayments.com/reference/request/client-token/generate/#customer_id). See [`vaultManagerOptions`](#~vaultManagerOptions) for all `vaultManager` options.
  *
  * @param {boolean} [options.preselectVaultedPaymentMethod=true] Whether or not to initialize Drop-in with a vaulted payment method pre-selected. Only applicable when using a [client token with a customer id](https://developers.braintreepayments.com/reference/request/client-token/generate/#customer_id) and a customer with saved payment methods.
  *
@@ -517,6 +522,16 @@ var VERSION = process.env.npm_package_version;
  *   authorization: 'CLIENT_AUTHORIZATION',
  *   container: '#dropin-container',
  *   vaultManager: true
+ * }, callback);
+ *
+ * @example
+ * <caption>Vault Manager that prevents deleting payment methods with subscriptions</caption>
+ * braintree.dropin.create({
+ *   authorization: 'CLIENT_AUTHORIZATION',
+ *   container: '#dropin-container',
+ *   vaultManager: {
+ *     preventDeletingPaymentMethodsWithSubscriptions: true
+ *   }
  * }, callback);
  */
 

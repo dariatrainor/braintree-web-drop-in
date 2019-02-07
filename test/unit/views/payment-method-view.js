@@ -1,6 +1,7 @@
 'use strict';
 
 var BaseView = require('../../../src/views/base-view');
+var classlist = require('@braintree/class-list');
 var fake = require('../../helpers/fake');
 var fs = require('fs');
 var PaymentMethodView = require('../../../src/views/payment-method-view');
@@ -205,6 +206,11 @@ describe('PaymentMethodView', function () {
   });
 
   describe('edit mode', function () {
+    beforeEach(function () {
+      this.sandbox.stub(PaymentMethodView.prototype, 'shouldPreventDeletion').returns(false);
+      this.sandbox.stub(classlist, 'add');
+    });
+
     it('does not call model.changeActivePaymentMethod in click handler when in edit mode', function () {
       var model = fake.model();
       var view = new PaymentMethodView({
@@ -247,6 +253,28 @@ describe('PaymentMethodView', function () {
 
       expect(fakeModel.confirmPaymentMethodDeletion).to.be.calledOnce;
       expect(fakeModel.confirmPaymentMethodDeletion).to.be.calledWith(paymentMethod);
+    });
+
+    it.only('applies braintree-method--disabled class when should prevent deletion is configured', function () {
+      var fakeModel = {
+        confirmPaymentMethodDeletion: this.sandbox.stub()
+      };
+      var paymentMethod = {
+        type: 'Foo',
+        nonce: 'nonce'
+      };
+      var view = new PaymentMethodView({
+        model: fakeModel,
+        strings: strings,
+        paymentMethod: paymentMethod
+      });
+
+      PaymentMethodView.prototype.shouldPreventDeletion.returns(true);
+
+      view.enableEditMode();
+
+      expect(classlist.add).to.be.calledTwice;
+      expect(classlist.add).to.be.calledWith(view.element, 'braintree-method--disabled');
     });
   });
 });

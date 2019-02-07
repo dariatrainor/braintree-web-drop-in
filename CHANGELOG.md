@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+unreleased
+----------
+- Add `preventDeletingPaymentMethodsWithSubscriptions` option to `vaultManager` configuration
+
 1.15.0
 ------
 - Add `rawPaymentData` to Apple Pay payment method payload

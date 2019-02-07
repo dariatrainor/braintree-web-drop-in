@@ -81,9 +81,16 @@ PaymentMethodView.prototype.setActive = function (isActive) {
 
 PaymentMethodView.prototype.enableEditMode = function () {
   classList.add(this.checkMark, 'braintree-hidden');
-  if (this.paymentMethod.hasSubscription) {
+
+  if (this.shouldPreventDeletion()) {
     classList.add(this.element, 'braintree-method--disabled');
   }
+};
+
+PaymentMethodView.prototype.shouldPreventDeletion = function () {
+  var vaultManagerConfig = this.model.merchantConfiguration.vaultManager;
+
+  return this.paymentMethod.hasSubscription && vaultManagerConfig && vaultManagerConfig.preventDeletingPaymentMethodsWithSubscriptions;
 };
 
 PaymentMethodView.prototype.disableEditMode = function () {
